@@ -22,6 +22,16 @@
             padding: 0;
             box-sizing: border-box;
         }
+<script>
+  // Remove automaticamente o parâmetro fbclid da URL
+  (function() {
+    const url = new URL(window.location);
+    if (url.searchParams.has('fbclid')) {
+      url.searchParams.delete('fbclid');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  })();
+</script>
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -2303,5 +2313,6 @@
     </script>
 
 </body>
+
 
 </html>
