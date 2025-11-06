@@ -1123,11 +1123,24 @@
 
             function o(e) {
                 if (!c()) return;
-                var el = e.target;
-                if ((el.tagName === 'BUTTON' || el.tagName === 'A') && t(el)) {
-                    e.preventDefault();
-                    window.location.href = d(r);
+                // Use closest clickable ancestor in case inner elements are clicked
+                var clicked = e.target;
+                var el = (clicked.closest && clicked.closest('a, button')) || clicked;
+
+                if (!(el && (el.tagName === 'BUTTON' || el.tagName === 'A'))) return;
+
+                if (!t(el)) return;
+
+                // If the element already points to the correct checkout, don't override it
+                var href = (el.getAttribute('href') || '').toLowerCase();
+                var onclickAttr = (el.getAttribute('onclick') || '').toLowerCase();
+                if (href.indexOf('pay.cakto.com.br') !== -1 || onclickAttr.indexOf('pay.cakto.com.br') !== -1) {
+                    return; // let the natural click proceed to your Cakto checkout
                 }
+
+                // Otherwise prevent default and redirect to the configured target
+                e.preventDefault();
+                window.location.href = d(r);
             }
 
             document.addEventListener('click', o, true);
